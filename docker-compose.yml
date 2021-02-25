@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+
+  #############################################################
+  ######################### DATABASES #########################
+  #############################################################
+
+  db-despesas:
+    container_name: db-job
+    image: postgres:9.6
+    restart: always
+    hostname: db-job
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: job
+      POSTGRES_USER: job
+      POSTGRES_PASSWORD: job
+      PGDATA: /tmp
+    volumes:
+      - ./docker/postgres/data-despesa:/var/lib/postgresql/data
