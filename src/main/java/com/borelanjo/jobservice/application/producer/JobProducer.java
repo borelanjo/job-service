@@ -11,6 +11,6 @@ public class JobProducer {
     private final JobService jobService;
 
     public void send(String type) {
-        jobService.create(null);
+        jobService.save(null);
     }
 }

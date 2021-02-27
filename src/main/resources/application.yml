@@ -3,9 +3,9 @@ spring:
   # Database
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_ALIAS:localhost}:5432/job?createDatabaseIfNotExist=true
-    username: job
-    password: job
+    url: ${DB_POS_URL:jdbc:postgresql://localhost:5432/job1?createDatabaseIfNotExist=true}
+    username: ${DB_POS_USERNAME:job1}
+    password: ${DB_POS_PASSWORD:job1}
   # JPA properties
   jpa:
     hibernate:

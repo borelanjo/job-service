@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class JobMdb {
+public class JobStatusChangeMdb {
 
     private final JobService jobService;
 
-    public void statusChange(String message) {
+    public void consume(String message) {
         jobService.update(null, null);
     }
 }

@@ -6,7 +6,7 @@ services:
   ######################### DATABASES #########################
   #############################################################
 
-  db-despesas:
+  db-job:
     container_name: db-job
     image: postgres:9.6
     restart: always
@@ -14,9 +14,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: job
-      POSTGRES_USER: job
-      POSTGRES_PASSWORD: job
+      POSTGRES_DB: job1
+      POSTGRES_USER: job1
+      POSTGRES_PASSWORD: job1
       PGDATA: /tmp
     volumes:
       - ./docker/postgres/data-despesa:/var/lib/postgresql/data
