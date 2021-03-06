@@ -16,6 +16,10 @@ public class ResponseService {
         return ResponseEntity.ok(new ResponseTo<T>(data));
     }
 
+    public <T> ResponseEntity<ResponseTo<T>> accepted(T data) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new ResponseTo<T>(data));
+    }
+
     public <T> ResponseEntity<T> accepted() {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }

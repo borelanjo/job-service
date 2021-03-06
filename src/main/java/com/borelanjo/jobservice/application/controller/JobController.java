@@ -1,19 +1,21 @@
 package com.borelanjo.jobservice.application.controller;
 
+import com.borelanjo.jobservice.application.producer.JobProducer;
 import com.borelanjo.jobservice.application.service.ResponseService;
 import com.borelanjo.jobservice.domain.model.Job;
 import com.borelanjo.jobservice.domain.service.JobService;
-import com.borelanjo.jobservice.presentation.dto.job.JobRequestTo;
+import com.borelanjo.jobservice.presentation.dto.job.JobCreateRequestTo;
 import com.borelanjo.jobservice.presentation.dto.job.JobResponseTo;
+import com.borelanjo.jobservice.presentation.dto.job.JobUpdateRequestTo;
 import com.borelanjo.jobservice.presentation.dto.shared.ResponseTo;
-import com.borelanjo.jobservice.presentation.mapper.JobMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.UUID;
 
 import static com.borelanjo.jobservice.presentation.mapper.JobMapper.from;
 
@@ -23,12 +25,12 @@ import static com.borelanjo.jobservice.presentation.mapper.JobMapper.from;
 public class JobController {
 
     private final JobService jobService;
+    private final JobProducer jobProducer;
     private final ResponseService responseService;
 
-
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseTo<JobResponseTo>> find(@PathVariable Long id) {
-        return responseService.ok(from(jobService.findById((id))));
+    @GetMapping("/{code}")
+    public ResponseEntity<ResponseTo<JobResponseTo>> findByCode(@PathVariable UUID code) {
+        return responseService.ok(from(jobService.findByCode((code))));
     }
 
     @GetMapping
@@ -37,16 +39,22 @@ public class JobController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseTo<JobResponseTo>> save(@RequestBody JobRequestTo requestTO) {
+    public ResponseEntity<ResponseTo<JobResponseTo>> wait(@RequestBody JobCreateRequestTo requestTO) {
         Job job = from(requestTO);
-        return responseService.ok(from(jobService.save(job)));
+
+        jobProducer.sendToWait(job);
+
+        return responseService.accepted(from(job));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseTo<JobResponseTo>> update(@PathVariable Long id,
-                                                            @RequestBody JobRequestTo requestTO) {
+    @PatchMapping(value = "/{code}/status/DEAD", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseTo<JobResponseTo>> dead(@PathVariable UUID code,
+                                                               @RequestBody JobUpdateRequestTo requestTO) {
         Job job = from(requestTO);
-        return responseService.ok(from(jobService.update(id, job)));
+
+        jobProducer.sendToDeath(code, job);
+
+        return responseService.accepted(from(job));
     }
 
 }

@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static com.borelanjo.jobservice.domain.model.Status.*;
+
 @Builder
 @Data
 @NoArgsConstructor
@@ -42,5 +44,29 @@ public class Job {
 
     @Column(name = "ended_at")
     private LocalDateTime endedAt;
+
+    public boolean isRunning() {
+        return RUNNING.equals(this.getStatus());
+    }
+
+    public boolean isWaiting() {
+        return WAITING.equals(this.getStatus());
+    }
+
+    public boolean isSuccess() {
+        return SUCCESS.equals(this.getStatus());
+    }
+
+    public boolean isError() {
+        return ERROR.equals(this.getStatus());
+    }
+
+    public boolean isDead() {
+        return DEAD.equals(this.getStatus());
+    }
+
+    public boolean isEnded() {
+        return isSuccess() || isError() || isDead();
+    }
 
 }

@@ -14,8 +14,6 @@ import java.util.UUID;
 @Builder
 public class JobResponseTo {
 
-    private Long id;
-
     private UUID code;
 
     private String type;
